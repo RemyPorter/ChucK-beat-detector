@@ -9,7 +9,7 @@ public class ListenForBeat {
 	64 => int bands;
 	fun int numBands() { return bands; }
 	fun int numBands(int bnds) { if (!running) bnds => bands; return bands;}
-	16 => int bandThreshold;
+	40 => int bandThreshold;
 	0.000005 => float threshold;
 	2048 => int size;
 	3 => int cooldown;
@@ -21,6 +21,15 @@ public class ListenForBeat {
 	RMS rmses[256];
 	float runningMeans[256];
 	
+	/*
+	Breaks the input signal up into bands using a BPF, then
+	connects each band into an FFT, so that we can find the power
+	on that band.
+
+	In the listen function, we'll grab the RMSes and find the ones
+	that are higher than their average power. If enough bands are "high"
+	at the same time, we'll call that a beat.
+	*/
 	fun void build() {
 		(high - low) / bands => step;
 		for (0 => int i; i < bands; i++) {
