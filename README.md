@@ -4,4 +4,4 @@ Running ```chuck rundetect.ck``` will launch a ChucK program that plays a sample
 
 In practice, you can create an instance of the ```ListenForBeat``` class, chuck a UGen at its ```source``` property, and spork the ```listen(Event e)``` function. Whenever it thinks there's a beat, it broadcasts to that Event object to notify external code.
 
-Running ```chuck runtap.ck``` launches a program that listens for keystrokes, and averages the time between strokes to find a beat. The main logic for that lives in ```beatTap.ck```.
+Running ```chuck runtap.ck``` launches a program that listens for keystrokes, and averages the time between strokes to find a beat. The main logic for that lives in ```beatTap.ck``` and ```beatTimer.ck```.
