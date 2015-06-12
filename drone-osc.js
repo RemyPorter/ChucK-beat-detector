@@ -32,6 +32,9 @@ dc.register("/test/op", function(drone, address, data) {
 		dc.flying = false;
 	});
 })
+.register("/move/stop", function(drone, address, data) {
+	drone.stop();
+})
 .register("/config/outdoor", function(drone, address, data) {
 	drone.config("CONFIG:outdoor", data[0]);
 })
@@ -43,6 +46,9 @@ dc.register("/test/op", function(drone, address, data) {
 })
 .register("/config/no_shell", function(drone, address, data) {
 	drone.config("CONTROL:flight_without_shell", data[0]);
+})
+.register("/reset", function(drone, address, data) {
+	drone.disableEmergency();
 })
 ;
 
