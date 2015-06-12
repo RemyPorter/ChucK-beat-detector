@@ -5,6 +5,7 @@ function DroneControl() {
 	var self = this;
 	this.flying = false;
 	self.drone = ard.createClient();
+	self.drone.config("control:altitude_max", 5000);
 	this.register = function(address, callback) {
 		self[address] = function(address, data) {
 			var sliced = data.slice(1);
@@ -30,6 +31,18 @@ dc.register("/test/op", function(drone, address, data) {
 	drone.land(function() {
 		dc.flying = false;
 	});
+})
+.register("/config/outdoor", function(drone, address, data) {
+	drone.config("CONFIG:outdoor", data[0]);
+})
+.register("/config/vert_speed", function(drone, address, data) {
+	drone.config("CONTROL:control_vz_max", data[0]);
+})
+.register("/config/yaw_speed", function(drone, address, data) {
+	drone.config("CONTROL:control_yaw", data[0]);
+})
+.register("/config/no_shell", function(drone, address, data) {
+	drone.config("CONTROL:flight_without_shell", data[0]);
 })
 ;
 
