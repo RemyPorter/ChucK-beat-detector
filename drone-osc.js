@@ -1,5 +1,18 @@
 var osc = require("node-osc");
 var ard = require("ar-drone");
+var parseArgs = require("minimist");
+
+var port = 8081;
+var sources = "0.0.0.0";
+
+var argv = parseArgs(process.argv);
+
+if (argv.port) port = argv.port;
+if (argv.mask) sources = argv.mask;
+
+console.log("Launching OSC server on " + port +
+	", listening to addresses like " + sources);
+
 
 function DroneControl() {
 	var self = this;
@@ -15,7 +28,7 @@ function DroneControl() {
 	}
 }
 
-var srv = new osc.Server(8081, "0.0.0.0");
+var srv = new osc.Server(port, sources);
 
 var dc = new DroneControl();
 dc.register("/test/op", function(drone, address, data) {
@@ -49,6 +62,7 @@ dc.register("/test/op", function(drone, address, data) {
 })
 .register("/reset", function(drone, address, data) {
 	drone.disableEmergency();
+	drone.stop();
 })
 ;
 

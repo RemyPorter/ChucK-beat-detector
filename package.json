@@ -2,8 +2,9 @@
 	"name": "drone-osc",
 	"descrption": "An Open Sound Control wrapper for the ARDrone API",
 	"author": "Remy Porter <remyporter@jetpackshark.com>",
-	"dependecies": {
+	"dependencies": {
 		"ar-drone": "0.x.x",
-		"node-osc": "1.x.x"
+		"node-osc": "1.x.x",
+		"minimist": "1.x.x"
 	}
 }
