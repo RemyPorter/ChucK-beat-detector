@@ -15,6 +15,11 @@ public class ListenForBeat {
 	3 => int cooldown;
 	20 => int low;
 	10000 => int high;
+	//This will "age out" older samples
+	//this prevents music with changes in dynamics from
+	//misdetecting beats
+	0.999 => float agingFactor;
+	10 => int agingInterval;
 	float step;
 	BPF banded[256];
 	FFT ffts[256];
@@ -55,6 +60,7 @@ public class ListenForBeat {
 				UAnaBlob d;
 				rmses[i].upchuck() @=> d;
 				d.fval(0) +=> runningMeans[i];
+				if (frames % agingInterval == 0) agingFactor *=> runningMeans[i];
 				if (d.fval(0) - threshold > runningMeans[i] / frames && d.fval(0) > 0.00005) {
 					highBands++;
 				}
