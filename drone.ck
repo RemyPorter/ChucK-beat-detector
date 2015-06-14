@@ -1,5 +1,13 @@
 public class Drone {
 	OscOut osc;
+
+	fun void outdoorMode() {
+		"true" => outdoor;
+		"true" => noShell;
+		2000 => verticalSpeed;
+		6.0 => yawSpeed;
+	}
+
 	fun void connect(string host, int port) {
 		(host, port) => osc.dest;
 	}
