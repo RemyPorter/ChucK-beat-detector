@@ -34,7 +34,16 @@ function path(id, path) {
 	return "/drone/ID" + id + path;
 }
 
+function parsePath(path) {
+	var split = path.split("/");
+	return {
+		id: split[2],
+		message: "/" + split.slice(3);
+	}
+}
+
 var srv = new osc.Server(port, sources);
+
 
 var dc = new DroneControl();
 dc.register(path(id, "/test/op"));, function(drone, address, data) {
@@ -109,6 +118,7 @@ dc.register(path(id, "/test/op"));, function(drone, address, data) {
 
 srv.on("message", function(msg, rinfo) {
 	var address = msg[0];
-	var resolved = dc[address];
-	resolved.call(dc, address, msg);
+	var parsed = parsePath(address).message;
+	var resolved = dc[parsed];
+	resolved.call(dc, parsed, msg);
 });
