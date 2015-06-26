@@ -96,6 +96,12 @@ dc.register(path(id, "/test/op"), function(drone, address, data) {
 			drone[direction](data[0]);
 		});
 	});
+dc.register(path("id", "/move/") + "zero", function(drone, address, data) {
+	if (dc.zero) {
+		//perform movements to put the drone at its current zero
+		//position
+	}
+});
 ['phiM30Deg', 'phi30Deg', 'thetaM30Deg', 
 	'theta30Deg', 'theta20degYaw200deg',
 	'theta20degYawM200deg', 'turnaround', 

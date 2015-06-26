@@ -1,11 +1,30 @@
 public class Drone {
 	OscOut osc;
 
+	dur vectorTrack[3];
+	time moveStart[3];
+	0 => int x;
+	1 => int y;
+	2 => int z;
+	0 => int moving;
+
+	fun void startMoving(int dir) {
+		stopMoving();
+		now => moveStart[dir];
+	}
+
 	int id;
 	fun void outdoorMode() {
 		"true" => outdoor;
 		"true" => noShell;
 		2000 => verticalSpeed;
+		6.0 => yawSpeed;
+	}
+
+	fun void indoorMode() {
+		"false" => outdoor;
+		"false" => noShell;
+		1000 => verticalSpeed;
 		6.0 => yawSpeed;
 	}
 
@@ -19,6 +38,12 @@ public class Drone {
 	}
 	fun void takeoff() {
 		osc.start(path("/takeoff")).send();
+	}
+	fun void zero() {
+		osc.start(path("/zero")).send();
+	}
+	fun void moveToZero() {
+		osc.start(path("/move/zero")).send();
 	}
 	fun void land() {
 		osc.start(path("/land")).send();
