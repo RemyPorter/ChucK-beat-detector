@@ -28,6 +28,9 @@ function DroneControl() {
 		}
 		return self;
 	}
+	self.drone.on("navdata", function(data) {
+		self.navdata = data;
+	});
 }
 
 function path(id, path) {
@@ -38,7 +41,7 @@ function parsePath(path) {
 	var split = path.split("/");
 	return {
 		id: split[2],
-		message: "/" + split.slice(3);
+		message: "/" + split.slice(3)
 	}
 }
 
@@ -46,36 +49,40 @@ var srv = new osc.Server(port, sources);
 
 
 var dc = new DroneControl();
-dc.register(path(id, "/test/op"));, function(drone, address, data) {
-	console.log(data)
+dc.register(path(id, "/test/op"), function(drone, address, data) {
+	console.log(data);
 })
-.register(path(id, "/takeoff"));, function(drone, address, data) {
+.register(path(id, "/takeoff"), function(drone, address, data) {
 	drone.takeoff(function() {
 		dc.flying = true;
+		dc.zero = dc.navdata;
 	});
 })
-.register(path(id, "/land"));, function(drone, address, data) {
+.register(path(id, "/zero"), function(drone, address, data) {
+	dc.zero = dc.navdata;
+})
+.register(path(id, "/land"), function(drone, address, data) {
 	drone.stop();
 	drone.land(function() {
 		dc.flying = false;
 	});
 })
-.register(path(id, "/move/stop"));, function(drone, address, data) {
+.register(path(id, "/move/stop"), function(drone, address, data) {
 	drone.stop();
 })
-.register(path(id, "/config/outdoor"));, function(drone, address, data) {
+.register(path(id, "/config/outdoor"), function(drone, address, data) {
 	drone.config("CONFIG:outdoor", data[0]);
 })
-.register(path(id, "/config/vert_speed"));, function(drone, address, data) {
+.register(path(id, "/config/vert_speed"), function(drone, address, data) {
 	drone.config("CONTROL:control_vz_max", data[0]);
 })
-.register(path(id, "/config/yaw_speed"));, function(drone, address, data) {
+.register(path(id, "/config/yaw_speed"), function(drone, address, data) {
 	drone.config("CONTROL:control_yaw", data[0]);
 })
-.register(path(id, "/config/no_shell"));, function(drone, address, data) {
+.register(path(id, "/config/no_shell"), function(drone, address, data) {
 	drone.config("CONTROL:flight_without_shell", data[0]);
 })
-.register(path(id, "/reset"));, function(drone, address, data) {
+.register(path(id, "/reset"), function(drone, address, data) {
 	drone.disableEmergency();
 	drone.stop();
 })
@@ -85,7 +92,7 @@ dc.register(path(id, "/test/op"));, function(drone, address, data) {
 	"up", "down", 
 	"clockwise", "counterClockwise",
 	"front", "back"].forEach(function(direction) {
-		dc.register(path(id, "/move/"));+direction, function(drone, address, data) {
+		dc.register(path(id, "/move/")+direction, function(drone, address, data) {
 			drone[direction](data[0]);
 		});
 	});
@@ -98,7 +105,7 @@ dc.register(path(id, "/test/op"));, function(drone, address, data) {
 	'doublePhiThetaMixed', 'flipAhead', 
 	'flipBehind', 'flipLeft', 'flipRight']
 .forEach(function(anim) {
-	dc.register(path(id, "/anim/")); + anim, function(drone, address, data) {
+	dc.register(path(id, "/anim/") + anim, function(drone, address, data) {
 		drone.animate(anim, data[0]);
 	})
 });
@@ -111,7 +118,7 @@ dc.register(path(id, "/test/op"));, function(drone, address, data) {
 	'rearLeftGreenOthersRed', 'leftGreenRightRed', 
 	'leftRedRightGreen','blinkStandard']
 .forEach(function(light) {
-	dc.register(path(id, "/light/")); + light, function(drone, address, data) {
+	dc.register(path(id, "/light/") + light, function(drone, address, data) {
 		drone.animateLeds(light, data[0], data[1]);
 	})
 });
