@@ -7,22 +7,26 @@ var sources = "0.0.0.0";
 var id = 0;
 
 var argv = parseArgs(process.argv);
+var factory = function() { return ard.createClient() };
 
 if (argv.port) port = argv.port;
 if (argv.mask) sources = argv.mask;
 if (argv.id) id = argv.id;
+if (argv.sim) factory = function() { return new DroneSim(); };
 
 console.log("Launching OSC server on " + port +
 	", listening to addresses like " + sources);
 
 
-function DroneControl() {
+function DroneControl(drone) {
 	var self = this;
 	this.flying = false;
-	self.drone = ard.createClient();
+	self.drone = drone;
 	self.drone.config("control:altitude_max", 5000);
 	this.register = function(address, callback) {
-		self[address] = function(address, data) {
+		var parsed = parsePath(address);
+		console.log(parsed.message);
+		self[parsed.message] = function(address, data) {
 			var sliced = data.slice(1);
 			callback(self.drone, address, sliced);
 		}
@@ -48,7 +52,7 @@ function parsePath(path) {
 var srv = new osc.Server(port, sources);
 
 
-var dc = new DroneControl();
+var dc = new DroneControl(ard.createClient());
 dc.register(path(id, "/test/op"), function(drone, address, data) {
 	console.log(data);
 })
@@ -132,6 +136,7 @@ dc.register(path("id", "/move/") + "zero", function(drone, address, data) {
 srv.on("message", function(msg, rinfo) {
 	var address = msg[0];
 	var parsed = parsePath(address).message;
+	console.log(parsed);
 	var resolved = dc[parsed];
 	resolved.call(dc, parsed, msg);
 });
