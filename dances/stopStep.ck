@@ -1,5 +1,5 @@
 public class Stop extends Step {
-	fun perform(Drone drone) {
+	fun void perform(Drone drone) {
 		drone.stop();
 		beat() => now;
 	}
