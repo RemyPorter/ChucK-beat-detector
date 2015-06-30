@@ -25,7 +25,6 @@ function DroneControl(drone) {
 	self.drone.config("control:altitude_max", 5000);
 	this.register = function(address, callback) {
 		var parsed = parsePath(address);
-		console.log(parsed.message);
 		self[parsed.message] = function(address, data) {
 			var sliced = data.slice(1);
 			callback(self.drone, address, sliced);
@@ -136,7 +135,6 @@ dc.register(path("id", "/move/") + "zero", function(drone, address, data) {
 srv.on("message", function(msg, rinfo) {
 	var address = msg[0];
 	var parsed = parsePath(address).message;
-	console.log(parsed);
 	var resolved = dc[parsed];
 	resolved.call(dc, parsed, msg);
 });

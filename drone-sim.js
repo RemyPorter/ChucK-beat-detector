@@ -3,18 +3,24 @@ function DroneSim() {
 	self.vector = [0,0,0,0];
 	self.flying = false;
 	var x = 0, y = 1, z = 2, t = 3;
+	function op(name) {
+		console.log(name, self.vector, self.flying);
+	}
 	self.config = function() {
 		console.log("Configed: ", arguments);
 	}
 	self.stop = function() {
-		self.vector = [0,0,0, 0];
+		self.vector = [0,0,0,0];
+		op("stop");
 	}
 	self.land = function() {
 		self.stop();
 		self.flying = false;
+		op("land");
 	}
 	self.takeoff = function() {
 		self.flying = true;
+		op("takeoff");
 	}
 	self.disableEmergency = function() {
 		return true;
@@ -31,7 +37,8 @@ function DroneSim() {
 		["front", z, 1], ["back", t, -1]
 	].forEach(function(dirVec) {
 		self[dirVec[0]] =
-			direction(dirVec[1], dirVec[2]) 
+			direction(dirVec[1], dirVec[2]) ;
+		op(dirVec[0]);
 	});
 
 	self.animate = function(animation, duration) {
@@ -43,6 +50,7 @@ function DroneSim() {
 	}
 
 	self.reset = function() {
+		op("reset");
 		self.land();
 	}
 }
