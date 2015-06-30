@@ -74,6 +74,13 @@ public class Drone {
 	fun void counterClockwise(float speed) {
 		osc.start(makePath("/move/counterClockwise")).add(speed).send();	
 	}
+	fun void spin(float speed) {
+		if (speed < 0) {
+			counterClockwise(-1 * speed);
+		} else {
+			clockwise(speed);
+		}
+	}
 	fun void stop() {
 		osc.start(makePath("/move/stop")).send();
 	}
