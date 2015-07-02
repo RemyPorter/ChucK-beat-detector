@@ -3,11 +3,11 @@ public class Step {
 	fun dur beat() { return beatLength; }
 	fun dur beat(dur bl) { bl => beatLength; return beatLength; }
 
-	DanceConfig config;
-	fun DanceConfig config() { return config; }
+	DanceConfig conf;
+	fun DanceConfig config() { return conf; }
 	fun DanceConfig config(DanceConfig c) {
-		c => config;
-		return config;
+		c @=> conf;
+		return conf;
 	}
 
 	Event endStep;

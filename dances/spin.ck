@@ -16,17 +16,22 @@ public class Spin extends Step {
 		distance * 2 * Math.PI => float deflection;
 		radsPerSecond * (1::second / beat()) => float radsPerBeat;
 		deflection / radsPerBeat => float beatRatio;
+		1 => int dirMod;
+		if (beatRatio < 0) {
+			-1 *=> beatRatio;
+			-1 => dirMod;
+		}
 		1.0 => float step;
 		if (distance < 0) -1 *=> step;
-		while (Math.abs(beatRatio) > 1.0) {
-			drone.spin(step);
+		while (beatRatio > 1.0) {
+			drone.spin(step * dirMod);
 			beat() => now;
 			drone.stop();
 			beat() => now;
 			step -=> beatRatio;
 		}
-		if (Math.abs(beatRatio) < 1.0) {
-			drone.spin(beatRatio);
+		if (beatRatio < 1.0) {
+			drone.spin(beatRatio * dirMod);
 			beat() => now;
 		}
 	}
