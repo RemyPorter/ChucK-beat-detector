@@ -133,6 +133,7 @@ dc.register(path("id", "/move/") + "zero", function(drone, address, data) {
 });
 
 srv.on("message", function(msg, rinfo) {
+	console.log(msg);
 	var address = msg[0];
 	var parsed = parsePath(address).message;
 	var resolved = dc[parsed];
